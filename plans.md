@@ -15,15 +15,17 @@ Currently implemented:
 - Reading/writing from a CAD via Scribe's interacts with the list of its stored vectors (writing may be disabled in the future)
 - Treat CADs themselves as media holders in order to more easily recharge trinket bullets
 - Phial CAD battery that trinket bullets can draw from, and allows the Recharge spell to distribute media to all bullets at once.
+- Hexes cast from trinket bullets can access the space immediately around the psi spell's attacking/attacked entity, regardless of normal range
+- Trinket bullets in armor slots have a cooldown on how often they can trigger their hex
 
 To do:
-- Limitations for the trinket bullet's casting (eldritchcarmaker suggests ambit based on where the bullet is)
 
 Planned for later:
 - More sensors for more iota types (and associated spell pieces)
 - Non-placeholder textures for most spell pieces
 - Dedicated pattern to get the above when the CAD isn't in your hand
 - Hex patterns exclusively for trinket bullets that return data from the psi spell context
+- Spell pieces that return media in bullet/CAD
 
 Maybe:
 - Psi material hex trinkets or similar
