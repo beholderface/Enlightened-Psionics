@@ -26,6 +26,17 @@ public class HexPsiApi {
         return stackList;
     }
 
+    public static List<ItemStack> getAllSocketStacks(ItemStack cadStack){
+        List<ItemStack> stackList = new ArrayList<>();
+        if (cadStack.getItem() instanceof ICAD icad){
+            ISocketable socketData = ((CADInvokerMixin) icad).publicGetSocketable(cadStack);
+            for (int i = 0; i < socketData.getLastSlot() + 1; i++){
+                stackList.add(socketData.getBulletInSocket(i));
+            }
+        }
+        return stackList;
+    }
+
     @Nullable
     public static ItemStack getSelectedBullet(ItemStack cadStack){
         if (cadStack.getItem() instanceof ICAD icad){

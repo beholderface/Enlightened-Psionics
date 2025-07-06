@@ -120,14 +120,14 @@ public abstract class MediaCADMixin implements MediaHolderItem {
                 List<ItemStack> stacksToCharge = new ArrayList<>();
                 stacksToCharge.add(HexPsiApi.getSelectedBullet(stack));
                 if (batteryStack.getItem() instanceof MediaHolderItem){
-                    List<ItemStack> allBullets = HexPsiApi.getAllBullets(stack);
+                    List<ItemStack> allBullets = HexPsiApi.getAllSocketStacks(stack);
                     //selected bullet should be prioritized
                     allBullets.remove(HexPsiApi.getSelectedSlot(stack));
                     stacksToCharge.addAll(allBullets);
                     stacksToCharge.add(batteryStack);
                 }
                 for (ItemStack charged : stacksToCharge){
-                    if (charged.getItem() instanceof MediaHolderItem mediaHolderItem){
+                    if ((!charged.isEmpty()) && charged.getItem() instanceof MediaHolderItem mediaHolderItem){
                         currentRemaining -= mediaHolderItem.insertMedia(charged, currentRemaining, false);
                         if (currentRemaining <= 0){
                             break;
