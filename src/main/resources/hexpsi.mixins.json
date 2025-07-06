@@ -4,11 +4,15 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "psi.refmap.json",
   "mixins": [
+    "CADInvokerMixin",
+    "CADTooltipMixin",
     "HelmetVectorStorageMixin",
+    "MediaCADMixin",
+    "PhialCADBatteryMixin",
     "PlayerRegenRateMixin",
     "ReadWriteCADMixin",
     "ReadWriteRulerMixin",
-    "SentinelPsiAmbitMixin"
+    "SentinelPsiAmbitMixin",
   ],
   "minVersion": "0.8.5"
 }

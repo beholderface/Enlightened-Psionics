@@ -56,6 +56,8 @@ import static at.petrak.hexcasting.common.items.magic.ItemMediaHolder.HEX_COLOR;
 public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolderItem, MediaHolderItem {
     public TrinketSpellBulletItem(Properties properties) {
         super(properties);
+        //psi forcing a max stack size is such a bruh moment
+        this.maxStackSize = 1;
     }
 
     @Override
@@ -203,7 +205,7 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
     public static final String TAG_SUPPRESS_FX = "hexpsi:suppress_fx";
 
     public void castHex(ServerLevel level, ServerPlayer caster, ItemStack stack, InteractionHand hand, SpellContext context){
-        TrinketBulletCastEnv env = new TrinketBulletCastEnv(caster, hand, stack);
+        TrinketBulletCastEnv env = new TrinketBulletCastEnv(caster, hand, stack, context);
         CastingVM harness = CastingVM.empty(env);
         List<Iota> instrs = this.getHex(stack, level);
         assert instrs != null;

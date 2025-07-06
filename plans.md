@@ -13,6 +13,8 @@ Currently implemented:
 - A spell bullet that triggers a hex written to it like a trinket
 - Spell pieces to suppress the above hex's cast effects, and the media report the bullet does
 - Reading/writing from a CAD via Scribe's interacts with the list of its stored vectors (writing may be disabled in the future)
+- Treat CADs themselves as media holders in order to more easily recharge trinket bullets
+- Phial CAD battery that trinket bullets can draw from, and allows the Recharge spell to distribute media to all bullets at once.
 
 To do:
 - Limitations for the trinket bullet's casting (eldritchcarmaker suggests ambit based on where the bullet is)
@@ -21,9 +23,9 @@ Planned for later:
 - More sensors for more iota types (and associated spell pieces)
 - Non-placeholder textures for most spell pieces
 - Dedicated pattern to get the above when the CAD isn't in your hand
-- Treat CADs themselves as media holders in order to more easily recharge trinket bullets
+- Hex patterns exclusively for trinket bullets that return data from the psi spell context
 
 Maybe:
-- Amethyst CAD components (phial battery?)
 - Psi material hex trinkets or similar
 - CAD battery as insulation against hex bloodcasting
+- CAD colorizer that mimics your hex pigment, and hex pigment that mimics your psi colorizer (both will fall back to some default if they find the other)
