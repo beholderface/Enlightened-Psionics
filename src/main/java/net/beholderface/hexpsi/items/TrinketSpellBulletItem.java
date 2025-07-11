@@ -41,6 +41,7 @@ import vazkii.psi.api.spell.ISpellAcceptor;
 import vazkii.psi.api.spell.SpellContext;
 import vazkii.psi.api.spell.SpellRuntimeException;
 import vazkii.psi.common.item.ItemSpellBullet;
+import vazkii.psi.common.item.armor.ItemPsimetalArmor;
 import vazkii.psi.common.network.MessageRegister;
 import vazkii.psi.common.network.message.MessageSpellError;
 
@@ -56,6 +57,8 @@ import static at.petrak.hexcasting.common.items.magic.ItemMediaHolder.HEX_COLOR;
 public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolderItem, MediaHolderItem {
     public TrinketSpellBulletItem(Properties properties) {
         super(properties);
+        //psi forcing a max stack size is such a bruh moment
+        this.maxStackSize = 1;
     }
 
     @Override
@@ -160,6 +163,7 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
 
 
     public static final String TAG_SUPPRESS_REPORT = "hexpsi:suppress_media_report";
+    public static final String TAG_CAST_TIMESTAMP = "lastCastStamp";
 
     @Override
     public ArrayList<Entity> castSpell(ItemStack stack, SpellContext context) {
@@ -174,7 +178,14 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
                     PsiAPI.internalHandler.delayContext(context);
                 }
                 if ((!context.stopped) && this.hasHex(stack)) {
-                    shouldCastHex = true;
+                    long lastArmorCast = -100L;
+                    if (context.tool != null && context.tool.getItem() instanceof ItemPsimetalArmor){
+                        CompoundTag data = stack.getOrCreateTag();
+                        if (data.contains(TAG_CAST_TIMESTAMP)){
+                            lastArmorCast = data.getLong(TAG_CAST_TIMESTAMP);
+                        }
+                    }
+                    shouldCastHex = context.caster.level().getGameTime() - lastArmorCast >= 20;
                 }
             } catch (SpellRuntimeException e) {
                 if (!context.shouldSuppressErrors()) {
@@ -190,7 +201,14 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
                 assert context.caster instanceof ServerPlayer;
                 ServerPlayer caster = (ServerPlayer) context.caster;
                 long originalMedia = this.getMedia(stack);
-                this.castHex(caster.serverLevel(), caster, stack, context.castFrom, context);
+                try {
+                    this.castHex(caster.serverLevel(), caster, stack, context.castFrom, context);
+                } catch (Exception idk){
+                    //ignored
+                } finally {
+                    CompoundTag data = stack.getOrCreateTag();
+                    data.putLong(TAG_CAST_TIMESTAMP, caster.level().getGameTime());
+                }
                 long postCastMedia = this.getMedia(stack);
                 if (!context.cspell.metadata.getFlag(TAG_SUPPRESS_REPORT) && originalMedia != postCastMedia){
                     caster.displayClientMessage(this.getHoverText(stack, false), true);
@@ -203,7 +221,7 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
     public static final String TAG_SUPPRESS_FX = "hexpsi:suppress_fx";
 
     public void castHex(ServerLevel level, ServerPlayer caster, ItemStack stack, InteractionHand hand, SpellContext context){
-        TrinketBulletCastEnv env = new TrinketBulletCastEnv(caster, hand, stack);
+        TrinketBulletCastEnv env = new TrinketBulletCastEnv(caster, hand, stack, context);
         CastingVM harness = CastingVM.empty(env);
         List<Iota> instrs = this.getHex(stack, level);
         assert instrs != null;
@@ -263,7 +281,7 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
     @Nonnull
     public Component getName(@Nonnull ItemStack stack) {
         Component bulletName = super.getName(stack);
-        if (ISpellAcceptor.hasSpell(stack)) {
+        if (ISpellAcceptor.hasSpell(stack) && this.hasHex(stack)) {
             float fullness = this.getMediaFullness(stack);
             String rawPercentage = String.valueOf(fullness * 100.0f);
             String formattedPercentage = (fullness == 1.0f ? "100" : rawPercentage.substring(0, Math.min(rawPercentage.length(), 4))) + "%";
