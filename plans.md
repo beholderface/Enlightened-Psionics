@@ -19,6 +19,7 @@ Currently implemented:
 - Trinket bullets in armor slots have a cooldown on how often they can trigger their hex
 
 To do:
+- Some way to recharge bullets in armor slots without taking them out first (Exosuit controller?)
 
 Planned for later:
 - More sensors for more iota types (and associated spell pieces)
