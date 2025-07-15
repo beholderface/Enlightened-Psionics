@@ -22,7 +22,7 @@ public class HexPsiPatterns {
     public static final HexPattern WRITE_HELMET = register(HexPattern.fromAngles("ewqweedwwwwqwa", HexDir.NORTH_EAST), "write_helmet", new OpWriteHelmet());
     public static final HexPattern READ_HELMET = register(HexPattern.fromAngles("ewqdaqaewwqwa", HexDir.NORTH_EAST), "read_helmet", new OpReadHelmet());
     public static final HexPattern READ_PSI_METER = register(HexPattern.fromAngles("ewqwdedqwwqwa", HexDir.NORTH_EAST), "read_psi_meter", new OpReadPsiMeter());
-    public static final HexPattern CRAFT_TRINKET_BULLET = register(HexPattern.fromAngles("ede", HexDir.NORTH_WEST), "craft_trinket_bullet", new OpMakeTrinketBullet());
+    public static final HexPattern CRAFT_TRINKET_BULLET = register(HexPattern.fromAngles("eqqqqqawwdeqdqwdqdwqdqe", HexDir.NORTH_WEST), "craft_trinket_bullet", new OpMakeTrinketBullet());
 
     public static HexPattern register(HexPattern pattern, String name, Action action){
         ACTIONS.register(name, ()->{
