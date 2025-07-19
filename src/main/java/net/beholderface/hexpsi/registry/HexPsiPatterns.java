@@ -17,6 +17,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.DeferredRegister;
 
 public class HexPsiPatterns {
+
+    private static boolean registered = false;
+
     public static final DeferredRegister<ActionRegistryEntry> ACTIONS = DeferredRegister.create(IXplatAbstractions.INSTANCE.getActionRegistry().key(), HexPsi.MODID);
 
     public static final HexPattern WRITE_HELMET = register(HexPattern.fromAngles("ewqweedwwwwqwa", HexDir.NORTH_EAST), "write_helmet", new OpWriteHelmet());
@@ -29,5 +32,12 @@ public class HexPsiPatterns {
             return Registry.register(HexActions.REGISTRY, new ResourceLocation(HexPsi.MODID, name), new ActionRegistryEntry(pattern, action));
         });
         return pattern;
+    }
+
+    public static boolean isRegistered(){
+        return registered;
+    }
+    public static void notifyRegistration(){
+        registered = true;
     }
 }

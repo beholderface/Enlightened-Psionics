@@ -81,7 +81,10 @@ public class HexPsi
 
     public static void initRegistries(IEventBus bus){
         bus.addListener((RegisterEvent event) -> {
-            HexPsiPatterns.ACTIONS.register(bus);
+            if (!HexPsiPatterns.isRegistered()){
+                HexPsiPatterns.ACTIONS.register(bus);
+                HexPsiPatterns.notifyRegistration();
+            }
         });
         HexPsiItems.init(bus);
     }
