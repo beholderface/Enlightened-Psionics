@@ -8,11 +8,13 @@
     "CADTooltipMixin",
     "HelmetVectorStorageMixin",
     "MediaCADMixin",
+    "MediaToolMixin",
     "PhialCADBatteryMixin",
     "PlayerRegenRateMixin",
+    "PsimetalItemBarMixin",
     "ReadWriteCADMixin",
     "ReadWriteRulerMixin",
-    "SentinelPsiAmbitMixin",
+    "SentinelPsiAmbitMixin"
   ],
   "minVersion": "0.8.5"
 }

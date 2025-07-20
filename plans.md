@@ -20,11 +20,12 @@ Currently implemented:
 
 To do:
 - Some way to recharge bullets in armor slots without taking them out first (Exosuit controller?)
+- actual fucking documentation beyond just spell piece descriptions
 
 Planned for later:
 - More sensors for more iota types (and associated spell pieces)
 - Non-placeholder textures for most spell pieces
-- Dedicated pattern to get the above when the CAD isn't in your hand
+- Dedicated pattern to get CAD vectors when the CAD isn't in your hand
 - Hex patterns exclusively for trinket bullets that return data from the psi spell context
 - Spell pieces that return media in bullet/CAD
 
