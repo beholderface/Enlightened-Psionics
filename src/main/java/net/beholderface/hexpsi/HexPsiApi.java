@@ -1,15 +1,10 @@
 package net.beholderface.hexpsi;
 
-import at.petrak.hexcasting.api.item.MediaHolderItem;
-import net.beholderface.hexpsi.mixin.CADInvokerMixin;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Unique;
-import vazkii.psi.api.cad.ICAD;
 import vazkii.psi.api.cad.ISocketable;
-import vazkii.psi.common.item.tool.IPsimetalTool;
 
 import java.util.ArrayList;
 import java.util.List;

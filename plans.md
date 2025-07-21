@@ -28,6 +28,7 @@ Planned for later:
 - Dedicated pattern to get CAD vectors when the CAD isn't in your hand
 - Hex patterns exclusively for trinket bullets that return data from the psi spell context
 - Spell pieces that return media in bullet/CAD
+- Spell piece that returns a trinket bullet's cooldown
 
 Maybe:
 - Psi material hex trinkets or similar
