@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": {
+      "item": "hexcasting:amethyst_dust"
+    },
+    "T": {
+      "item": "hexcasting:trinket"
+    },
+    "P": {
+      "tag": "forge:ingots/psimetal"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "IDI",
+    "PTP",
+    "IDI"
+  ],
+  "result": {
+    "item": "hexpsi:spell_bullet_trinket"
+  }
+}

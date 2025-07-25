@@ -1,0 +1,11 @@
+{
+  "name": "hexpsi.entry.introduction",
+  "category": "hexcasting:psionics",
+  "icon": "hexpsi:psi_core_staff",
+  "sortnum": 0,
+  "advancement": "hexcasting:root",
+  "pages": [
+    "hexpsi.page.introduction.1",
+    "hexpsi.page.introduction.2"
+  ]
+}

@@ -2,10 +2,9 @@ package net.beholderface.hexpsi.items;
 
 import at.petrak.hexcasting.api.casting.ParticleSpray;
 import at.petrak.hexcasting.api.casting.eval.ExecutionClientView;
+import at.petrak.hexcasting.api.casting.eval.vm.CastingImage;
 import at.petrak.hexcasting.api.casting.eval.vm.CastingVM;
-import at.petrak.hexcasting.api.casting.iota.Iota;
-import at.petrak.hexcasting.api.casting.iota.IotaType;
-import at.petrak.hexcasting.api.casting.iota.PatternIota;
+import at.petrak.hexcasting.api.casting.iota.*;
 import at.petrak.hexcasting.api.casting.math.HexPattern;
 import at.petrak.hexcasting.api.item.HexHolderItem;
 import at.petrak.hexcasting.api.item.MediaHolderItem;
@@ -17,6 +16,7 @@ import at.petrak.hexcasting.common.msgs.MsgNewSpiralPatternsS2C;
 import at.petrak.hexcasting.xplat.IXplatAbstractions;
 import net.beholderface.hexpsi.hex.environment.TrinketBulletCastEnv;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -34,6 +34,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import vazkii.psi.api.PsiAPI;
@@ -42,6 +43,11 @@ import vazkii.psi.api.spell.SpellContext;
 import vazkii.psi.api.spell.SpellRuntimeException;
 import vazkii.psi.common.item.ItemSpellBullet;
 import vazkii.psi.common.item.armor.ItemPsimetalArmor;
+import vazkii.psi.common.item.armor.ItemPsimetalExosuitChestplate;
+import vazkii.psi.common.item.tool.ItemPsimetalAxe;
+import vazkii.psi.common.item.tool.ItemPsimetalPickaxe;
+import vazkii.psi.common.item.tool.ItemPsimetalShovel;
+import vazkii.psi.common.item.tool.ItemPsimetalSword;
 import vazkii.psi.common.network.MessageRegister;
 import vazkii.psi.common.network.message.MessageSpellError;
 
@@ -202,7 +208,7 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
                 ServerPlayer caster = (ServerPlayer) context.caster;
                 long originalMedia = this.getMedia(stack);
                 try {
-                    this.castHex(caster.serverLevel(), caster, stack, context.castFrom, context);
+                    this.castHex(caster.serverLevel(), caster, stack, context);
                 } catch (Exception idk){
                     //ignored
                 } finally {
@@ -220,9 +226,23 @@ public class TrinketSpellBulletItem extends ItemSpellBullet implements HexHolder
 
     public static final String TAG_SUPPRESS_FX = "hexpsi:suppress_fx";
 
-    public void castHex(ServerLevel level, ServerPlayer caster, ItemStack stack, InteractionHand hand, SpellContext context){
-        TrinketBulletCastEnv env = new TrinketBulletCastEnv(caster, hand, stack, context);
+    public void castHex(ServerLevel level, ServerPlayer caster, ItemStack stack, SpellContext context){
+        TrinketBulletCastEnv env = new TrinketBulletCastEnv(caster, context.castFrom, stack, context);
         CastingVM harness = CastingVM.empty(env);
+        CastingImage emptyImage = harness.getImage();
+        List<Iota> startingStack = new ArrayList<>();
+        if (context.tool.getItem() instanceof ItemPsimetalPickaxe || context.tool.getItem() instanceof ItemPsimetalShovel || context.tool.getItem() instanceof ItemPsimetalAxe){
+            BlockHitResult hit = context.positionBroken;
+            if (hit != null){
+                BlockPos hitPos = hit.getBlockPos();
+                startingStack.add(new Vec3Iota(new Vec3(hitPos.getX() + 0.5, hitPos.getY() + 0.5, hitPos.getZ() + 0.5)));
+            }
+        } else if (context.tool.getItem() instanceof ItemPsimetalExosuitChestplate){
+            startingStack.add(new EntityIota(context.attackingEntity));
+        } else if (context.tool.getItem() instanceof ItemPsimetalSword){
+            startingStack.add(new EntityIota(context.attackedEntity));
+        }
+        harness.setImage(emptyImage.copy(startingStack, emptyImage.getParenCount(), emptyImage.getParenthesized(), emptyImage.getEscapeNext(), emptyImage.getOpsConsumed(), emptyImage.getUserData()));
         List<Iota> instrs = this.getHex(stack, level);
         assert instrs != null;
         ExecutionClientView clientView = harness.queueExecuteAndWrapIotas(instrs, level);

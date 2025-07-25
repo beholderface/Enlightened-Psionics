@@ -3,16 +3,12 @@ package net.beholderface.hexpsi;
 import at.petrak.hexcasting.api.casting.ActionRegistryEntry;
 import at.petrak.hexcasting.common.lib.HexCreativeTabs;
 import at.petrak.hexcasting.common.lib.HexRegistries;
-import com.mojang.datafixers.util.Either;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
 import net.beholderface.hexpsi.registry.HexPsiItems;
 import net.beholderface.hexpsi.registry.HexPsiPatterns;
 import net.beholderface.hexpsi.registry.HexPsiPieces;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -30,15 +26,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import vazkii.psi.common.core.PsiCreativeTab;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(HexPsi.MODID)
 public class HexPsi
 {
@@ -47,8 +38,6 @@ public class HexPsi
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final DeferredRegister<ActionRegistryEntry> ACTIONS = DeferredRegister.create(HexRegistries.ACTION, MODID);
-    //public static final RegistryObject<Block> EXAMPLE_BLOCK = BLOCKS.register("example_block", () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)));
-    //public static final RegistryObject<Item> EXAMPLE_BLOCK_ITEM = ITEMS.register("example_block", () -> new BlockItem(EXAMPLE_BLOCK.get(), new Item.Properties()));
 
     public HexPsi(FMLJavaModLoadingContext context)
     {
@@ -81,7 +70,10 @@ public class HexPsi
 
     public static void initRegistries(IEventBus bus){
         bus.addListener((RegisterEvent event) -> {
-            HexPsiPatterns.ACTIONS.register(bus);
+            if (!HexPsiPatterns.isRegistered()){
+                HexPsiPatterns.ACTIONS.register(bus);
+                HexPsiPatterns.notifyRegistration();
+            }
         });
         HexPsiItems.init(bus);
     }
@@ -91,20 +83,24 @@ public class HexPsi
 
     }
 
+    private static MinecraftServer cachedServer = null;
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
         LOGGER.info("Happy psexcasting :)");
+        cachedServer = event.getServer();
+    }
+
+    @Nullable
+    public static MinecraftServer getCachedServer(){
+        return cachedServer;
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents
-    {
+    public static class ClientModEvents {
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
-            /*LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());*/
+        public static void onClientSetup(FMLClientSetupEvent event) {
+
         }
     }
 }
